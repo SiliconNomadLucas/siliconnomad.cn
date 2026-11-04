@@ -1,0 +1,57 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="隐私政策 · 硅基游民 Lucas" description="硅基游民 Lucas 个人网站的隐私说明。">
+	<main class="privacy-page">
+		<header class="page-heading">
+			<a class="back-link" href="/">首页</a>
+			<h1>隐私政策</h1>
+			<p>更新日期：2026年11月4日</p>
+		</header>
+
+		<div class="policy-content">
+			<section>
+				<h2>适用范围</h2>
+				<p>本说明适用于 siliconnomad.cn 个人网站。网站用于展示个人介绍、文章、合辑与平台链接。</p>
+			</section>
+			<section>
+				<h2>网站数据</h2>
+				<p>本网站目前不提供注册、登录、评论或联系表单，也未接入网站访问分析服务。网站页面本身不使用广告追踪 Cookie，也不在浏览器中保存个人资料。</p>
+				<p>网站由云服务器提供访问。服务器及其网络服务可能为传输、安全和故障排查处理必要的连接与技术日志，具体内容和保存期限取决于服务器配置及服务商规则。</p>
+			</section>
+			<section>
+				<h2>地图服务</h2>
+				<p>“碳基足迹”地图使用 OpenFreeMap 提供的地图样式和地图数据，地图加载时，你的浏览器会直接向地图服务请求样式、字体和地图瓦片。该服务可能收到请求所需的网络与设备信息；详情请查看 <a href="https://openfreemap.org/privacy/" target="_blank" rel="noreferrer">OpenFreeMap 隐私说明</a>。</p>
+			</section>
+			<section>
+				<h2>外部链接</h2>
+				<p>本网站包含指向社交平台及其他第三方网站的链接。打开这些链接后，相关网站将按其自身的隐私政策处理数据；本网站不控制其数据处理行为。</p>
+			</section>
+			<section>
+				<h2>联系与更新</h2>
+				<p>如对本隐私说明有疑问，可通过 <a href="mailto:SiliconNomadLucas@gmail.com">SiliconNomadLucas@gmail.com</a> 联系。若网站功能或数据处理方式发生变化，本页面会相应更新。</p>
+			</section>
+		</div>
+	</main>
+</SiteLayout>
+
+<style>
+	.privacy-page { width: min(100% - 44px, 820px); min-height: calc(100vh - 180px); margin: 0 auto; padding: 132px 0 88px; }
+	.page-heading { padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+	.back-link { display: inline-block; margin-bottom: 20px; color: var(--slate); font-size: 13px; }
+	.back-link:hover { color: var(--blue); }
+	h1 { margin: 0; font-size: 38px; font-weight: 600; }
+	.page-heading p { margin: 11px 0 0; color: var(--slate); font-size: 12px; }
+	.policy-content section { padding: 24px 0 10px; border-bottom: 1px solid #e6e6e8; }
+	.policy-content section:last-child { border-bottom: 0; }
+	.policy-content h2 { margin: 0 0 9px; font-size: 16px; font-weight: 600; }
+	.policy-content p { margin: 0 0 9px; color: #45494d; font-size: 13px; line-height: 1.8; }
+	.policy-content a { text-decoration: underline; text-decoration-color: #c5c9ce; text-underline-offset: 3px; }
+	.policy-content a:hover { color: var(--blue); }
+	@media (max-width: 700px) {
+		.privacy-page { padding-top: 105px; }
+		h1 { font-size: 32px; }
+		.policy-content section { padding-top: 20px; }
+	}
+</style>

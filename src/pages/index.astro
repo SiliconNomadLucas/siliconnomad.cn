@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import avatar from '../../素材/头像.png';
+const featured = [
+	'精选文章',
+	'精选文章',
+	'精选文章',
+	'精选文章',
+	'精选文章',
+];
+---
+
+<SiteLayout title="硅基游民 Lucas · 保持对这个世界的好奇心" current="home">
+	<main>
+		<section class="hero" id="home">
+			<div class="globe-wrap" aria-hidden="true"><canvas id="binary-globe"></canvas></div>
+			<div class="hero-copy">
+				<Image src={avatar} alt="" class="hero-avatar" />
+				<p class="intro">Hi，我是Lucas</p>
+				<h1>保持对这个世界的好奇心</h1>
+			</div>
+		</section>
+		<section class="articles" id="articles" aria-labelledby="articles-title">
+			<h2 id="articles-title">精选文章</h2>
+			<div class="featured-list">
+				{featured.map((title) => (
+					<article class="featured-row">
+						<h3>{title}</h3>
+					</article>
+				))}
+			</div>
+		</section>
+	</main>
+</SiteLayout>
+
+<style>
+	.hero { min-height: 700px; height: min(830px, 100svh); padding: 90px 10% 54px; position: relative; overflow: hidden; display: grid; align-items: center; background: #fff; }
+	.hero-copy { position: relative; z-index: 1; width: min(100%, 960px); margin: 0 auto; text-align: center; }
+	.hero-avatar { width: 74px; height: 74px; margin-bottom: 24px; border-radius: 50%; object-fit: cover; }
+	.intro { margin: 0 0 18px; color: var(--slate); font-size: 30px; font-weight: 600; line-height: 1; }
+	h1 { max-width: 940px; margin: 0 auto; font-size: 68px; line-height: 1.18; font-weight: 600; }
+	.globe-wrap { width: min(78vw, 800px); aspect-ratio: 1; position: absolute; top: calc(50% + 32px); left: 50%; transform: translate(-50%, -50%); opacity: .42; }
+	#binary-globe { width: 100%; height: 100%; display: block; }
+	.articles { background: var(--mist); padding: 72px max(8%, calc((100vw - 1040px)/2)) 82px; }
+	.articles > h2 { margin: 0 0 25px; font-size: 38px; line-height: 1.2; font-weight: 600; }
+	.featured-list { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+	.featured-row { min-height: 75px; padding: 17px 0; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+	.featured-row:last-child { border-bottom: 0; }
+	.featured-row h3 { margin: 0; font-size: 17px; line-height: 1.5; font-weight: 500; }
+	.featured-row:hover h3 { color: var(--blue); }
+	@media (max-width: 700px) {
+		.hero { min-height: 690px; height: 100svh; max-height: 820px; padding: 80px 22px 45px; }
+		.globe-wrap { top: calc(50% + 30px); width: min(120vw, 580px); opacity: .36; }
+		.hero-avatar { width: 62px; height: 62px; margin-bottom: 20px; }
+		.intro { font-size: 30px; margin-bottom: 14px; }
+		h1 { max-width: 350px; font-size: 28px; line-height: 1.4; }
+		.articles { padding: 52px 22px 60px; }
+		.articles > h2 { margin-bottom: 19px; font-size: 29px; }
+		.featured-row { min-height: 82px; }
+		.featured-row h3 { font-size: 15px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+	}
+</style>
+
+<script>
+	const THREE = await import('three');
+	const canvas = document.querySelector<HTMLCanvasElement>('#binary-globe');
+
+	if (canvas) {
+		const response = await fetch('/earth-land.geojson');
+		if (response.ok) {
+			const world = await response.json() as {
+				features: Array<{ geometry: { type: string; coordinates: number[][][][] | number[][][] } }>;
+			};
+			const textureCanvas = document.createElement('canvas');
+			textureCanvas.width = 1600;
+			textureCanvas.height = 800;
+			const textureContext = textureCanvas.getContext('2d');
+			if (textureContext) {
+				const mask = document.createElement('canvas');
+				mask.width = textureCanvas.width;
+				mask.height = textureCanvas.height;
+				const maskContext = mask.getContext('2d', { willReadFrequently: true });
+				if (maskContext) {
+					maskContext.fillStyle = '#fff';
+					for (const feature of world.features) {
+						const polygons = feature.geometry.type === 'Polygon'
+							? [feature.geometry.coordinates as number[][][]]
+							: feature.geometry.coordinates as number[][][][];
+						for (const polygon of polygons) {
+							const path = new Path2D();
+							for (const ring of polygon) {
+								ring.forEach(([longitude, latitude], index) => {
+									const x = ((longitude + 180) / 360) * mask.width;
+									const y = ((90 - latitude) / 180) * mask.height;
+									if (index === 0) path.moveTo(x, y);
+									else path.lineTo(x, y);
+								});
+								path.closePath();
+							}
+							maskContext.fill(path, 'evenodd');
+						}
+					}
+					const land = maskContext.getImageData(0, 0, mask.width, mask.height).data;
+					textureContext.textAlign = 'center';
+					textureContext.textBaseline = 'middle';
+					for (let latitude = -78; latitude <= 82; latitude += 1.8) {
+						for (let longitude = -180; longitude < 180; longitude += 1.7) {
+							const x = Math.floor(((longitude + 180) / 360) * mask.width);
+							const y = Math.floor(((90 - latitude) / 180) * mask.height);
+							if (!land[(y * mask.width + x) * 4 + 3]) continue;
+							const tone = Math.floor(98 + Math.random() * 35);
+							textureContext.font = `${8 + Math.random() * 2}px monospace`;
+							textureContext.fillStyle = `rgba(${tone}, ${tone}, ${tone}, ${0.58 + Math.random() * 0.3})`;
+							textureContext.fillText(Math.random() > 0.5 ? '0' : '1', x, y);
+						}
+					}
+				}
+			}
+
+			const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+			camera.position.z = 4.2;
+			const texture = new THREE.CanvasTexture(textureCanvas);
+			const globe = new THREE.Mesh(
+				new THREE.SphereGeometry(1, 80, 56),
+				new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.FrontSide }),
+			);
+			globe.rotation.y = -THREE.MathUtils.degToRad(75);
+			scene.add(globe);
+			const resize = () => {
+				const { width, height } = canvas.getBoundingClientRect();
+				if (!width || !height) return;
+				renderer.setSize(width, height, false);
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+			};
+			const observer = new ResizeObserver(resize);
+			observer.observe(canvas);
+			resize();
+			const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			const draw = () => {
+				if (!reducedMotion && !document.hidden) globe.rotation.y += 0.0011;
+				renderer.render(scene, camera);
+				requestAnimationFrame(draw);
+			};
+			draw();
+		}
+	}
+</script>

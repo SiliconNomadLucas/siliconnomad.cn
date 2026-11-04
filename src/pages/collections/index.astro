@@ -1,0 +1,52 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+const collections = [
+	{ slug: 'curiosity-weekly', title: '好奇心周刊' },
+	{ slug: 'organic-notes', title: '碳基思考碎片' },
+	{ slug: 'silicon-notes', title: '硅基思考碎片' },
+	{ slug: 'periodic-observations', title: '周期观察笔记' },
+];
+---
+
+<SiteLayout
+	title="合辑 · 硅基游民 Lucas"
+	description="硅基游民 Lucas 的文章合辑。"
+	current="collections"
+>
+	<main class="page-main">
+		<header class="page-heading">
+			<p class="eyebrow">合辑</p>
+			<h1>合辑</h1>
+		</header>
+		<div class="collection-list">
+			{collections.map((collection) => (
+				<a class="collection-row" href={`/collections/${collection.slug}/`}>
+					<span class="collection-name">
+						<strong>{collection.title}</strong>
+					</span>
+				</a>
+			))}
+		</div>
+	</main>
+</SiteLayout>
+
+<style>
+	.page-main { min-height: calc(100vh - 180px); padding: 144px max(8%, calc((100vw - 1040px)/2)) 100px; }
+	.page-heading { padding-bottom: 34px; border-bottom: 1px solid var(--line); }
+	.eyebrow { margin: 0 0 12px; color: var(--slate); font-size: 13px; }
+	h1 { margin: 0; font-size: 48px; line-height: 1.15; font-weight: 600; }
+	.collection-list { border-bottom: 1px solid var(--line); }
+	.collection-row { min-height: 116px; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+	.collection-row:last-child { border-bottom: 0; }
+	.collection-name { display: grid; gap: 6px; }
+	.collection-name strong { font-size: 19px; font-weight: 500; }
+	.collection-name small { color: var(--slate); font-size: 11px; }
+	.collection-row:hover strong { color: var(--blue); }
+	@media (max-width: 700px) {
+		.page-main { padding: 112px 22px 70px; }
+		h1 { font-size: 38px; }
+		.collection-row { min-height: 94px; }
+		.collection-name strong { font-size: 16px; }
+	}
+</style>

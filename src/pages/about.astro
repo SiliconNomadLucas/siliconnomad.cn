@@ -1,0 +1,219 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const platforms = [
+	{ label: '抖音', href: 'https://v.douyin.com/70Bihprf1o8/' },
+	{ label: '小红书', href: 'https://www.xiaohongshu.com/user/profile/604aea730000000001001e83' },
+	{ label: '豆瓣', href: 'https://www.douban.com/people/SiliconNomad/' },
+	{ label: 'Bilibili', href: 'https://space.bilibili.com/235572105' },
+	{ label: 'GitHub', href: 'https://github.com/SiliconNomadLucas' },
+	{ label: 'YouTube', href: 'https://www.youtube.com/@SiliconNomadLucas' },
+	{ label: 'X', href: 'https://x.com/siliconnomadlucas' },
+	{ label: 'Steam', href: 'https://steamcommunity.com/id/siliconnomadlucas/' },
+];
+---
+
+<SiteLayout
+	title="关于 · 硅基游民 Lucas"
+	description="关于硅基游民 Lucas。"
+	current="about"
+>
+	<main class="page-main">
+		<header class="page-heading">
+			<p class="eyebrow">关于</p>
+			<h1>硅基游民 Lucas</h1>
+			<p class="slogan">保持对这个世界的好奇心</p>
+		</header>
+
+		<section class="about-section">
+			<h2>个人简介</h2>
+			<ul class="profile-list">
+				<li>人类</li>
+				<li>游戏、电影、阅读、摄影、游泳、跑步、Vibecoding爱好者</li>
+				<li>喜欢黑色和白色</li>
+				<li><a href="https://www.apesk.com/p/result_for_gzh.asp?rid=55661382" target="_blank" rel="noreferrer">INTJ-C-O</a></li>
+				<li><a href="/resume/">我的简历</a></li>
+			</ul>
+		</section>
+
+		<section class="about-section footprint">
+			<h2>碳基足迹</h2>
+			<div class="world-map">
+				<div id="footprint-map" class="maplibre-globe" aria-label="可缩放球形世界地图"></div>
+				<a class="map-attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors · OpenMapTiles</a>
+				<div class="map-status" id="map-status">正在加载世界地图</div>
+				<div class="footprint-legend" aria-label="足迹类型">
+					<span><i class="legend-dot residence-dot"></i>居住</span>
+					<span><i class="legend-dot travel-dot"></i>旅行</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="about-section silicon">
+			<h2>硅基足迹</h2>
+			<ul class="platform-list">
+				{platforms.map((platform) => (
+					<li><a href={platform.href} target="_blank" rel="noreferrer">{platform.label}</a></li>
+				))}
+			</ul>
+		</section>
+	</main>
+</SiteLayout>
+
+<style>
+	.page-main { min-height: calc(100vh - 180px); padding: 144px max(8%, calc((100vw - 1040px)/2)) 100px; }
+	.page-heading { padding-bottom: 44px; border-bottom: 1px solid var(--line); }
+	.eyebrow { margin: 0 0 13px; color: var(--slate); font-size: 13px; }
+	h1 { margin: 0; font-size: 48px; line-height: 1.2; font-weight: 600; }
+	.slogan { margin: 15px 0 0; color: var(--slate); font-size: 17px; }
+	.about-section { padding: 32px 0 38px; border-bottom: 1px solid var(--line); }
+	.about-section h2 { margin: 0; font-size: 20px; font-weight: 500; }
+	.profile-list, .platform-list { display: grid; gap: 7px; margin: 15px 0 12px; padding-left: 19px; color: #45494d; font-size: 14px; line-height: 1.7; }
+	.profile-list a, .resume-link { color: #6b7280; text-decoration: underline; text-decoration-color: #c5c9ce; text-underline-offset: 3px; }
+	.profile-list a:hover, .resume-link:hover { color: var(--blue); }
+	.resume-link { display: inline-block; margin-left: 19px; font-size: 13px; }
+	.world-map { position: relative; width: min(100%, 520px); margin: 22px auto 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+	.maplibre-globe { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; background: #fff; }
+	.map-attribution { justify-self: end; color: #7d8288; font-size: 9px; line-height: 1.4; }
+	.map-attribution:hover { color: var(--blue); }
+	.map-status { position: absolute; z-index: 2; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--slate); background: #fff; font-size: 13px; text-align: center; pointer-events: none; }
+	.map-status[hidden] { display: none; }
+	:global(.map-footprint-marker) { width: 11px; height: 11px; padding: 0; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 3px rgba(29,29,31,.1), 0 1px 3px rgba(0,0,0,.25); cursor: pointer; }
+	:global(.map-footprint-marker--travel) { background: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,.18), 0 1px 3px rgba(0,0,0,.25); }
+	:global(.map-footprint-marker--residence) { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.18), 0 1px 3px rgba(0,0,0,.25); }
+	:global(.map-footprint-marker:hover) { transform: scale(1.15); }
+	:global(.maplibregl-popup-content) { padding: 7px 10px; border: 1px solid #e6e6e8; border-radius: 2px; box-shadow: none; font-family: inherit; font-size: 12px; }
+	.footprint-legend { position: absolute; right: 10px; bottom: 28px; display: flex; gap: 12px; padding: 0; color: #555b61; font-size: 11px; pointer-events: none; }
+	.footprint-legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+	.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+	.residence-dot { background: #2563eb; }
+	.travel-dot { background: #f97316; }
+	.platform-list li { padding-left: 0; }
+	.platform-list a { color: inherit; }
+	.platform-list a:hover { color: var(--blue); }
+	@media (max-width: 700px) {
+		.page-main { padding: 112px 22px 70px; }
+		h1 { font-size: 36px; }
+		.slogan { font-size: 15px; }
+		.about-section { padding: 25px 0 30px; }
+		.about-section h2 { font-size: 18px; }
+		.world-map { margin-top: 12px; }
+	}
+</style>
+
+<script>
+	import * as maplibregl from 'maplibre-gl';
+	import mapLibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+	import 'maplibre-gl/dist/maplibre-gl.css';
+
+	maplibregl.setWorkerUrl(mapLibreWorkerUrl);
+	const mapElement = document.querySelector<HTMLElement>('#footprint-map');
+	const footprintTooltip = document.querySelector<HTMLElement>('#footprint-tooltip');
+	const mapStatus = document.querySelector<HTMLElement>('#map-status');
+	const footprintLocations: Array<{
+		name: string;
+		coordinates: [number, number];
+		type: 'residence' | 'travel';
+	}> = [
+		{ name: '惠州 · 1998.08', coordinates: [114.4152, 23.1115], type: 'residence' },
+		{ name: '普宁 · 2000.09', coordinates: [116.1668, 23.3147], type: 'residence' },
+		{ name: '珠海 · 2017.09', coordinates: [113.5719, 22.2742], type: 'residence' },
+		{ name: '深圳 · 2021.07', coordinates: [114.0544, 22.5467], type: 'residence' },
+		{ name: '广州 · 2021.09', coordinates: [113.26, 23.13], type: 'residence' },
+		{ name: '湛江 · 2018.06', coordinates: [110.3594, 21.2707], type: 'travel' },
+		{ name: '汕头 · 2024.11', coordinates: [116.6788, 23.3549], type: 'travel' },
+		{ name: '舟山 · 2025.09', coordinates: [122.2074, 29.9856], type: 'travel' },
+		{ name: '芒市 · 2026.01', coordinates: [98.5881, 24.4337], type: 'travel' },
+		{ name: '腾冲 · 2026.01', coordinates: [98.483, 25.017], type: 'travel' },
+		{ name: '大理 · 2026.01', coordinates: [100.2679, 25.6065], type: 'travel' },
+		{ name: '昆明 · 2026.01', coordinates: [102.7183, 25.0389], type: 'travel' },
+		{ name: '东山 · 2026.10', coordinates: [117.4203, 23.6994], type: 'travel' },
+	];
+
+	if (mapElement) {
+		const mapStyleResponse = await fetch('https://tiles.openfreemap.org/styles/positron');
+		if (!mapStyleResponse.ok) throw new Error('Failed to load map style');
+		const mapStyle = await mapStyleResponse.json() as {
+			layers: Array<{ type: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }>;
+			[key: string]: unknown;
+		};
+		for (const layer of mapStyle.layers) {
+			if (layer.type === 'background' && layer.paint) {
+				layer.paint['background-color'] = '#ffffff';
+			}
+			if (layer.type === 'symbol') {
+				layer.paint ??= {};
+				layer.paint['text-color'] = '#6b7280';
+				layer.paint['text-halo-color'] = '#ffffff';
+				layer.paint['text-halo-width'] = 1.2;
+			}
+			const textField = layer.layout?.['text-field'];
+			if (layer.type !== 'symbol' || !textField || !JSON.stringify(textField).includes('name')) continue;
+			layer.layout!['text-field'] = [
+				'coalesce',
+				['get', 'name:zh-Hans'],
+				['get', 'name:zh-CN'],
+				['get', 'name:zh'],
+				['get', 'name_en'],
+				['get', 'name:latin'],
+				['get', 'name'],
+			];
+		}
+
+		const map = new maplibregl.Map({
+			container: mapElement,
+			style: mapStyle as maplibregl.StyleSpecification,
+			center: [110, 27],
+			zoom: 1.7,
+			projection: 'globe',
+			dragRotate: true,
+			touchPitch: true,
+			attributionControl: false,
+		});
+		map.once('styledata', () => {
+			map.setProjection({ type: 'globe' });
+			mapStatus?.setAttribute('hidden', '');
+		});
+
+		for (const location of footprintLocations) {
+			const marker = document.createElement('button');
+			marker.type = 'button';
+			marker.className = `map-footprint-marker map-footprint-marker--${location.type}`;
+			marker.setAttribute('aria-label', location.name);
+			const popup = new maplibregl.Popup({
+				offset: 9,
+				closeButton: false,
+				closeOnMove: false,
+				focusAfterOpen: false,
+			}).setText(location.name);
+			new maplibregl.Marker({ element: marker, anchor: 'center' })
+				.setLngLat(location.coordinates)
+				.addTo(map);
+			const showPopup = () => popup.setLngLat(location.coordinates).addTo(map);
+			marker.addEventListener('mouseenter', showPopup);
+			marker.addEventListener('mouseleave', () => popup.remove());
+			marker.addEventListener('focus', showPopup);
+			marker.addEventListener('blur', () => popup.remove());
+			marker.addEventListener('click', (event) => {
+				event.stopPropagation();
+				showPopup();
+			});
+		}
+
+		map.on('error', () => {
+			if (!mapStatus || mapStatus.dataset.failed) return;
+			mapStatus.dataset.failed = 'true';
+			mapStatus.textContent = '地图加载失败，请检查网络连接';
+			mapStatus.removeAttribute('hidden');
+		});
+
+		const resizeObserver = new ResizeObserver(() => map.resize());
+		resizeObserver.observe(mapElement);
+		document.addEventListener('astro:before-swap', () => {
+			resizeObserver.disconnect();
+			map.remove();
+		}, { once: true });
+
+		if (footprintTooltip) footprintTooltip.hidden = true;
+	}
+</script>

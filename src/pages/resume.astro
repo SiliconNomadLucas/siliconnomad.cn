@@ -1,0 +1,150 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const experience = [
+	{
+		company: '广东横琴汇鼎管理咨询有限公司',
+		role: '行政经理助理',
+		date: '2025.10-2026.06',
+		details: [
+			'作为行政经理助理，参与关联公司的工商注册、私募基金管理人备案、基金备案、制定内部规定等相关工作',
+			'负责公司线上工作平台的管理，开发投资项目管理系统、飞书文件归档系统等工具',
+		],
+	},
+	{
+		company: '广东省粤科母基金投资管理有限公司',
+		role: '投资经理助理',
+		date: '2024.07-2025.04',
+		details: [
+			'作为投资经理助理，协助完成接续基金型S交易底层资产项目行业及业务分析，资产包定价与退出收益预测、投决报告等，参与S交易十余项，完成百余家企业的评估分析工作',
+			'参与投资标的尽职调查，协助制定采访问题、整理会议纪要等',
+		],
+	},
+	{
+		company: '国联民生证券股份有限公司',
+		role: '分析师助理',
+		date: '2023.07-2023.09',
+		details: [
+			'跟踪通信行业相关上市公司，协助撰写广和通、移远通信、美格智能等通信行业上市公司深度研究报告5份',
+			'参与上市公司业务访谈交流，协助制定采访问题、整理会议纪要等',
+		],
+	},
+	{
+		company: '深圳市峰林创业投资有限公司',
+		role: '投资经理助理',
+		date: '2022.07-2022.09',
+		details: [
+			'跟进某公司港股 Pre-IPO 项目，协助完成约 8 万字尽职调查报告一份',
+			'独立完成光电通信芯片行业研究与新能源汽车动力电池成本拆解工作，输出研究报告2份',
+		],
+	},
+];
+---
+
+<SiteLayout title="简历 · 硅基游民 Lucas" description="硅基游民 Lucas 的教育、工作与项目经历。" current="about">
+	<main class="resume-page">
+		<header class="resume-heading">
+			<a class="back-link" href="/about/">关于</a>
+			<h1>简历</h1>
+		</header>
+
+		<section class="resume-section">
+			<h2>基本信息</h2>
+			<div class="basic-info">
+				<p>李镇南</p>
+				<p>邮箱：<a href="mailto:SiliconNomadLucas@gmail.com">SiliconNomadLucas@gmail.com</a></p>
+				<p>微信：SiliconNomad</p>
+				<p>个人网站：<a href="https://www.siliconnomad.cn">www.siliconnomad.cn</a></p>
+				<p>现居地：广东揭阳</p>
+			</div>
+		</section>
+
+		<section class="resume-section">
+			<h2>教育经历</h2>
+			<div class="entry">
+				<div class="entry-heading"><h3>硕士研究生 · 暨南大学 · 产业经济学</h3><time>2021.09 – 2025.12</time></div>
+				<p>主修课程：</p>
+				<p class="muted">产业组织理论、区域经济学、计量经济学、产业政策分析</p>
+			</div>
+			<div class="entry">
+				<div class="entry-heading"><h3>本科 · 暨南大学 · 工商管理</h3><time>2017.09 – 2021.06</time></div>
+			</div>
+		</section>
+
+		<section class="resume-section">
+			<h2>工作经历</h2>
+			{experience.map((item) => (
+				<article class="entry">
+					<div class="entry-heading"><h3>{item.company}</h3><time>{item.date}</time></div>
+					<p class="role">{item.role}</p>
+					<ul>{item.details.map((detail) => <li>{detail}</li>)}</ul>
+				</article>
+			))}
+		</section>
+
+		<section class="resume-section">
+			<h2>项目经历</h2>
+			<article class="entry">
+				<div class="entry-heading"><h3>暨南大学金融与投资俱乐部</h3><time>2021.10 – 2022.10</time></div>
+				<p>职责：社团负责人</p>
+				<p>职责：组织参与10余次校园线上线下讲座、企业游学、分享沙龙等活动，负责组织策划、嘉宾对接、活动宣传等工作</p>
+			</article>
+			<article class="entry">
+				<div class="entry-heading"><h3>行业课题研究</h3><time>2021.10 – 2022.02</time></div>
+				<p>职责：课题负责人</p>
+				<p>作为课题组组长，深入分析光通信产业与光伏产业，输出3万字产业研究报告共两份</p>
+			</article>
+		</section>
+
+		<section class="resume-section last-section">
+			<h2>技能与证书</h2>
+			<p>熟练应用软件：Codex；DSH；Office；Wind；Ifind；Python；Premiere；Photoshop</p>
+			<p>技能证书: 证券从业资格证；CET4；CET6；</p>
+		</section>
+
+		<section class="resume-section last-section">
+			<h2>个人优势</h2>
+			<ul class="advantage-list">
+				<li>熟练掌握Codex等Vibe coding工具与本地大模型部署，擅长AI Skill的开发，具备结合业务流程开发AI Agent的能力</li>
+				<li>具备扎实产业经济知识与行业研究经验，擅长数据分析、报告撰写及投研全流程协助，具备良好的沟通协调与团队协作能力，执行力强</li>
+			</ul>
+		</section>
+	</main>
+</SiteLayout>
+
+<style>
+	.resume-page { width: min(100% - 44px, 920px); min-height: calc(100vh - 180px); margin: 0 auto; padding: 132px 0 88px; }
+	.resume-heading { padding-bottom: 34px; border-bottom: 1px solid var(--line); }
+	.back-link { display: inline-block; margin-bottom: 20px; color: var(--slate); font-size: 13px; }
+	.back-link:hover { color: var(--blue); }
+	h1 { margin: 0; font-size: 42px; font-weight: 600; }
+	.resume-heading p { margin: 12px 0 0; color: var(--slate); font-size: 14px; }
+	.resume-section { padding: 30px 0 10px; border-bottom: 1px solid var(--line); }
+	.resume-section h2 { margin: 0 0 19px; font-size: 20px; font-weight: 600; }
+	.basic-info { display: grid; gap: 7px; }
+	.basic-info p { margin: 0; color: #45494d; font-size: 13px; line-height: 1.75; }
+	.basic-info a { color: inherit; text-decoration: underline; text-decoration-color: #c5c9ce; text-underline-offset: 3px; }
+	.basic-info a:hover { color: var(--blue); }
+	.entry { padding: 0 0 20px; }
+	.entry-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
+	.entry-heading h3 { margin: 0; font-size: 15px; font-weight: 600; }
+	time, .muted { color: var(--slate); font-size: 12px; }
+	.entry p { margin: 7px 0 0; color: #45494d; font-size: 13px; line-height: 1.75; }
+	.entry p.muted { color: var(--slate); }
+	.entry .role { color: var(--slate); }
+	.entry ul { margin: 8px 0 0; padding-left: 18px; color: #45494d; font-size: 13px; line-height: 1.75; }
+	.entry p + p { margin-top: 7px; }
+	.last-section > p { margin: 7px 0 0; color: #45494d; font-family: inherit; font-size: 13px; font-weight: 400; line-height: 1.75; letter-spacing: normal; }
+	.advantage-list { margin: 0; padding-left: 18px; color: #45494d; font-size: 13px; line-height: 1.75; }
+	.advantage-list li + li { margin-top: 7px; }
+	.last-section { border-bottom: 0; }
+	@media (max-width: 700px) {
+		.resume-page { padding-top: 105px; }
+		h1 { font-size: 34px; }
+		.resume-section { padding-top: 24px; }
+		.resume-section h2 { font-size: 18px; }
+		.entry-heading { display: block; }
+		.entry-heading time { display: block; margin-top: 5px; }
+		.entry-heading h3 { line-height: 1.5; }
+	}
+</style>

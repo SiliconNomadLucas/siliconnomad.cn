@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export function getStaticPaths() {
+	const collections = [
+		{ slug: 'curiosity-weekly', title: '好奇心周刊' },
+		{ slug: 'organic-notes', title: '碳基思考碎片' },
+		{ slug: 'silicon-notes', title: '硅基思考碎片' },
+		{ slug: 'periodic-observations', title: '周期观察笔记' },
+	];
+	return collections.map((collection) => ({
+		params: { slug: collection.slug },
+		props: { collection },
+	}));
+}
+
+const { collection } = Astro.props;
+---
+
+<SiteLayout title={`${collection.title} · 硅基游民 Lucas`} current="collections">
+	<main class="page-main">
+		<header class="page-heading">
+			<a class="back-link" href="/collections/">合辑</a>
+			<h1>{collection.title}</h1>
+		</header>
+		<div class="empty-list"></div>
+	</main>
+</SiteLayout>
+
+<style>
+	.page-main { min-height: calc(100vh - 180px); padding: 144px max(8%, calc((100vw - 1040px)/2)) 100px; }
+	.page-heading { padding-bottom: 34px; border-bottom: 1px solid var(--line); }
+	.back-link { display: inline-block; margin-bottom: 20px; color: var(--slate); font-size: 13px; }
+	.back-link:hover { color: var(--blue); }
+	h1 { margin: 0; font-size: 42px; line-height: 1.2; font-weight: 600; }
+	.empty-list { min-height: 280px; border-bottom: 1px solid var(--line); }
+	@media (max-width: 700px) {
+		.page-main { padding: 112px 22px 70px; }
+		h1 { font-size: 32px; }
+	}
+</style>

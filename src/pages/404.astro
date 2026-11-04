@@ -1,0 +1,59 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="页面未找到 · 硅基游民 Lucas" description="你访问的页面不存在或已移动。">
+	<main class="not-found">
+		<p class="status">404</p>
+		<h1>这个页面暂时找不到</h1>
+		<p class="message">你访问的地址可能已更改，或页面已经移除。</p>
+		<a class="home-link" href="/">返回首页</a>
+	</main>
+</SiteLayout>
+
+<style>
+	.not-found {
+		min-height: min(680px, 100svh);
+		padding: 140px 22px 80px;
+		display: grid;
+		align-content: center;
+		justify-items: center;
+		text-align: center;
+	}
+	.status {
+		margin: 0 0 16px;
+		color: var(--blue);
+		font-size: 14px;
+		font-weight: 600;
+	}
+	h1 {
+		margin: 0;
+		font-size: 34px;
+		line-height: 1.35;
+		font-weight: 600;
+	}
+	.message {
+		margin: 14px 0 26px;
+		color: var(--slate);
+		font-size: 15px;
+		line-height: 1.7;
+	}
+	.home-link {
+		min-height: 42px;
+		padding: 0 17px;
+		display: inline-flex;
+		align-items: center;
+		border: 1px solid var(--ink);
+		font-size: 14px;
+		transition: color .18s ease, background .18s ease;
+	}
+	.home-link:hover {
+		color: #fff;
+		background: var(--ink);
+	}
+	@media (max-width: 700px) {
+		.not-found { min-height: 620px; }
+		h1 { font-size: 27px; }
+		.message { max-width: 300px; font-size: 14px; }
+	}
+</style>

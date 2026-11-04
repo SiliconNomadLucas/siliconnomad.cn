@@ -1,0 +1,59 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+---
+
+<SiteLayout
+	title="文章 · 硅基游民 Lucas"
+	description="硅基游民 Lucas 的文章、栏目与标签。"
+	current="articles"
+>
+	<main class="page-main">
+		<header class="page-heading">
+			<p class="eyebrow">文章</p>
+			<h1>文章</h1>
+		</header>
+
+		<section class="taxonomy" aria-label="文章栏目与标签">
+			<div class="taxonomy-row">
+				<h2>栏目</h2>
+				<p>暂无栏目</p>
+			</div>
+			<div class="taxonomy-row">
+				<h2>标签</h2>
+				<p>暂无标签</p>
+			</div>
+		</section>
+
+		<section class="latest" aria-labelledby="latest-title">
+			<div class="latest-heading">
+				<h2 id="latest-title">最近更新</h2>
+				<span>0 篇</span>
+			</div>
+			<div class="empty-state"></div>
+		</section>
+	</main>
+</SiteLayout>
+
+<style>
+	.page-main { min-height: calc(100vh - 180px); padding: 144px max(8%, calc((100vw - 1040px)/2)) 100px; }
+	.page-heading { padding-bottom: 34px; border-bottom: 1px solid var(--line); }
+	.eyebrow { margin: 0 0 12px; color: var(--slate); font-size: 13px; }
+	h1 { margin: 0; font-size: 48px; line-height: 1.15; font-weight: 600; }
+	.taxonomy { border-bottom: 1px solid var(--line); }
+	.taxonomy-row { min-height: 68px; display: grid; grid-template-columns: 130px 1fr; align-items: center; border-bottom: 1px solid var(--line); }
+	.taxonomy-row:last-child { border-bottom: 0; }
+	.taxonomy-row h2 { margin: 0; color: var(--slate); font-size: 13px; font-weight: 500; }
+	.taxonomy-row p { margin: 0; color: var(--steel); font-size: 13px; }
+	.latest { padding-top: 42px; }
+	.latest-heading { display: flex; justify-content: space-between; align-items: baseline; }
+	.latest-heading h2 { margin: 0; font-size: 28px; font-weight: 600; }
+	.latest-heading span { color: var(--steel); font-size: 12px; }
+	.empty-state { min-height: 220px; }
+	@media (max-width: 700px) {
+		.page-main { padding: 112px 22px 70px; }
+		h1 { font-size: 38px; }
+		.taxonomy-row { min-height: 60px; grid-template-columns: 78px 1fr; }
+		.latest { padding-top: 32px; }
+		.latest-heading h2 { font-size: 23px; }
+	}
+</style>
