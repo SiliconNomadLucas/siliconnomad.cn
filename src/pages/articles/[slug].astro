@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export async function getStaticPaths() {
+	const articles = await getCollection('articles', ({ data }) => !data.draft);
+	return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+
+<SiteLayout
+	title={`${article.data.title} · 硅基游民 Lucas`}
+	description={article.data.description}
+	current="articles"
+>
+	<main class="article-page">
+		<a class="back-link" href="/articles/">返回文章</a>
+		<header class="article-heading">
+			<p class="eyebrow">
+				<time datetime={article.data.pubDate.toISOString()}>{article.data.pubDate.toLocaleDateString('zh-CN')}</time>
+				{article.data.updatedDate && <span> · 更新于 {article.data.updatedDate.toLocaleDateString('zh-CN')}</span>}
+			</p>
+			<h1>{article.data.title}</h1>
+			<p class="description">{article.data.description}</p>
+			{article.data.tags.length > 0 && <p class="tags">{article.data.tags.join(' · ')}</p>}
+		</header>
+		<article class="prose">
+			<Content />
+		</article>
+	</main>
+</SiteLayout>
+
+<style>
+	.article-page { min-height: calc(100vh - 180px); padding: 132px 22px 100px; }
+	.back-link, .article-heading, .prose { width: min(100%, 760px); margin-inline: auto; }
+	.back-link { display: block; margin-bottom: 26px; color: var(--slate); font-size: 13px; }
+	.back-link:hover { color: var(--blue); }
+	.article-heading { padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+	.eyebrow { margin: 0 0 16px; color: var(--slate); font-size: 12px; }
+	h1 { margin: 0; font-size: 42px; line-height: 1.3; font-weight: 600; }
+	.description { margin: 14px 0 0; color: var(--slate); font-size: 16px; line-height: 1.7; }
+	.tags { margin: 14px 0 0; color: var(--steel); font-size: 12px; }
+	.prose { padding-top: 28px; color: #333; font-size: 16px; line-height: 1.9; overflow-wrap: anywhere; }
+	.prose :global(h2) { margin: 42px 0 14px; color: var(--ink); font-size: 25px; line-height: 1.4; }
+	.prose :global(h3) { margin: 32px 0 12px; color: var(--ink); font-size: 20px; }
+	.prose :global(p) { margin: 0 0 20px; }
+	.prose :global(a) { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+	.prose :global(ul), .prose :global(ol) { padding-left: 1.4em; margin: 0 0 22px; }
+	.prose :global(blockquote) { margin: 24px 0; padding-left: 18px; border-left: 2px solid var(--line); color: var(--slate); }
+	.prose :global(pre) { overflow-x: auto; padding: 16px; background: var(--mist); font-size: 13px; line-height: 1.6; }
+	.prose :global(img) { max-width: 100%; height: auto; }
+	@media (max-width: 700px) {
+		.article-page { padding: 104px 22px 70px; }
+		h1 { font-size: 31px; }
+		.description { font-size: 14px; }
+		.prose { font-size: 15px; }
+		.prose :global(h2) { font-size: 22px; }
+	}
+</style>

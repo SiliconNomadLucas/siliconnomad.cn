@@ -131,89 +131,118 @@ const platforms = [
 	];
 
 	if (mapElement) {
-		const mapStyleResponse = await fetch('https://tiles.openfreemap.org/styles/positron');
-		if (!mapStyleResponse.ok) throw new Error('Failed to load map style');
-		const mapStyle = await mapStyleResponse.json() as {
-			layers: Array<{ type: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }>;
-			[key: string]: unknown;
-		};
-		for (const layer of mapStyle.layers) {
-			if (layer.type === 'background' && layer.paint) {
-				layer.paint['background-color'] = '#ffffff';
-			}
-			if (layer.type === 'symbol') {
-				layer.paint ??= {};
-				layer.paint['text-color'] = '#6b7280';
-				layer.paint['text-halo-color'] = '#ffffff';
-				layer.paint['text-halo-width'] = 1.2;
-			}
-			const textField = layer.layout?.['text-field'];
-			if (layer.type !== 'symbol' || !textField || !JSON.stringify(textField).includes('name')) continue;
-			layer.layout!['text-field'] = [
-				'coalesce',
-				['get', 'name:zh-Hans'],
-				['get', 'name:zh-CN'],
-				['get', 'name:zh'],
-				['get', 'name_en'],
-				['get', 'name:latin'],
-				['get', 'name'],
-			];
-		}
+		let mapLoaded = false;
+		let lastMapError = '';
+		let mapLoadTimer: number | undefined;
+		let resizeObserver: ResizeObserver | undefined;
+		let map: maplibregl.Map | undefined;
 
-		const map = new maplibregl.Map({
-			container: mapElement,
-			style: mapStyle as maplibregl.StyleSpecification,
-			center: [110, 27],
-			zoom: 1.7,
-			projection: 'globe',
-			dragRotate: true,
-			touchPitch: true,
-			attributionControl: false,
-		});
-		map.once('styledata', () => {
-			map.setProjection({ type: 'globe' });
-			mapStatus?.setAttribute('hidden', '');
-		});
-
-		for (const location of footprintLocations) {
-			const marker = document.createElement('button');
-			marker.type = 'button';
-			marker.className = `map-footprint-marker map-footprint-marker--${location.type}`;
-			marker.setAttribute('aria-label', location.name);
-			const popup = new maplibregl.Popup({
-				offset: 9,
-				closeButton: false,
-				closeOnMove: false,
-				focusAfterOpen: false,
-			}).setText(location.name);
-			new maplibregl.Marker({ element: marker, anchor: 'center' })
-				.setLngLat(location.coordinates)
-				.addTo(map);
-			const showPopup = () => popup.setLngLat(location.coordinates).addTo(map);
-			marker.addEventListener('mouseenter', showPopup);
-			marker.addEventListener('mouseleave', () => popup.remove());
-			marker.addEventListener('focus', showPopup);
-			marker.addEventListener('blur', () => popup.remove());
-			marker.addEventListener('click', (event) => {
-				event.stopPropagation();
-				showPopup();
-			});
-		}
-
-		map.on('error', () => {
-			if (!mapStatus || mapStatus.dataset.failed) return;
-			mapStatus.dataset.failed = 'true';
-			mapStatus.textContent = '地图加载失败，请检查网络连接';
+		const showMapError = () => {
+			if (!mapStatus) return;
+			const detail = lastMapError.trim().slice(0, 180);
+			mapStatus.textContent = detail
+				? `地图资源加载失败：${detail}`
+				: '地图加载超时，请尝试无痕窗口，或检查地图服务连接';
 			mapStatus.removeAttribute('hidden');
-		});
+		};
 
-		const resizeObserver = new ResizeObserver(() => map.resize());
-		resizeObserver.observe(mapElement);
-		document.addEventListener('astro:before-swap', () => {
-			resizeObserver.disconnect();
-			map.remove();
-		}, { once: true });
+		try {
+			const mapStyleResponse = await fetch('https://tiles.openfreemap.org/styles/positron', {
+				signal: AbortSignal.timeout(15000),
+			});
+			if (!mapStyleResponse.ok) throw new Error(`Map style request failed: ${mapStyleResponse.status}`);
+			const mapStyle = await mapStyleResponse.json() as {
+				layers: Array<{ type: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }>;
+				[key: string]: unknown;
+			};
+			for (const layer of mapStyle.layers) {
+				if (layer.type === 'background' && layer.paint) {
+					layer.paint['background-color'] = '#ffffff';
+				}
+				if (layer.type === 'symbol') {
+					layer.paint ??= {};
+					layer.paint['text-color'] = '#6b7280';
+					layer.paint['text-halo-color'] = '#ffffff';
+					layer.paint['text-halo-width'] = 1.2;
+				}
+				const textField = layer.layout?.['text-field'];
+				if (layer.type !== 'symbol' || !textField || !JSON.stringify(textField).includes('name')) continue;
+				layer.layout!['text-field'] = [
+					'coalesce',
+					['get', 'name:zh-Hans'],
+					['get', 'name:zh-CN'],
+					['get', 'name:zh'],
+					['get', 'name_en'],
+					['get', 'name:latin'],
+					['get', 'name'],
+				];
+			}
 
-		if (footprintTooltip) footprintTooltip.hidden = true;
+			map = new maplibregl.Map({
+				container: mapElement,
+				style: mapStyle as maplibregl.StyleSpecification,
+				center: [110, 27],
+				zoom: 1.7,
+				projection: 'globe',
+				dragRotate: true,
+				touchPitch: true,
+				attributionControl: false,
+			});
+			mapLoadTimer = window.setTimeout(() => {
+				if (!mapLoaded && mapStatus) {
+					mapStatus.dataset.timedOut = 'true';
+					showMapError();
+				}
+			}, 20000);
+			map.once('load', () => {
+				mapLoaded = true;
+				window.clearTimeout(mapLoadTimer);
+				if (mapStatus) delete mapStatus.dataset.timedOut;
+				mapStatus?.setAttribute('hidden', '');
+			});
+			map.on('error', (event) => {
+				lastMapError = event.error instanceof Error ? event.error.message : String(event.error);
+				console.warn('Footprint map resource error:', event.error);
+				if (!mapLoaded && mapStatus?.dataset.timedOut === 'true') showMapError();
+			});
+
+			for (const location of footprintLocations) {
+				const marker = document.createElement('button');
+				marker.type = 'button';
+				marker.className = `map-footprint-marker map-footprint-marker--${location.type}`;
+				marker.setAttribute('aria-label', location.name);
+				const popup = new maplibregl.Popup({
+					offset: 9,
+					closeButton: false,
+					closeOnMove: false,
+					focusAfterOpen: false,
+				}).setText(location.name);
+				new maplibregl.Marker({ element: marker, anchor: 'center' })
+					.setLngLat(location.coordinates)
+					.addTo(map);
+				const showPopup = () => popup.setLngLat(location.coordinates).addTo(map!);
+				marker.addEventListener('mouseenter', showPopup);
+				marker.addEventListener('mouseleave', () => popup.remove());
+				marker.addEventListener('focus', showPopup);
+				marker.addEventListener('blur', () => popup.remove());
+				marker.addEventListener('click', (event) => {
+					event.stopPropagation();
+					showPopup();
+				});
+			}
+
+			resizeObserver = new ResizeObserver(() => map?.resize());
+			resizeObserver.observe(mapElement);
+			document.addEventListener('astro:before-swap', () => {
+				window.clearTimeout(mapLoadTimer);
+				resizeObserver?.disconnect();
+				map?.remove();
+			}, { once: true });
+
+			if (footprintTooltip) footprintTooltip.hidden = true;
+		} catch (error) {
+			console.error('Footprint map initialization failed:', error);
+			showMapError();
+		}
 	}
 </script>
