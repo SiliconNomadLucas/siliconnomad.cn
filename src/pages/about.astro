@@ -82,6 +82,7 @@ const platforms = [
 	:global(.map-footprint-marker--travel) { background: #f97316; box-shadow: 0 0 0 4px rgba(249,115,22,.18), 0 1px 3px rgba(0,0,0,.25); }
 	:global(.map-footprint-marker--residence) { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.18), 0 1px 3px rgba(0,0,0,.25); }
 	:global(.map-footprint-marker:hover) { transform: scale(1.15); }
+	:global(.maplibregl-marker-covered) { pointer-events: none; }
 	:global(.maplibregl-popup-content) { padding: 7px 10px; border: 1px solid #e6e6e8; border-radius: 2px; box-shadow: none; font-family: inherit; font-size: 12px; }
 	.footprint-legend { position: absolute; right: 10px; bottom: 28px; display: flex; gap: 12px; padding: 0; color: #555b61; font-size: 11px; pointer-events: none; }
 	.footprint-legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -121,12 +122,16 @@ const platforms = [
 		{ name: '深圳 · 2021.07', coordinates: [114.0544, 22.5467], type: 'residence' },
 		{ name: '广州 · 2021.09', coordinates: [113.26, 23.13], type: 'residence' },
 		{ name: '湛江 · 2018.06', coordinates: [110.3594, 21.2707], type: 'travel' },
+		{ name: '南澳 · 2023.02', coordinates: [117.0194, 23.4238], type: 'travel' },
+		{ name: '潮州 · 2023.02', coordinates: [116.6226, 23.6567], type: 'travel' },
+		{ name: '中山 · 2023.11', coordinates: [113.3928, 22.5176], type: 'travel' },
 		{ name: '汕头 · 2024.11', coordinates: [116.6788, 23.3549], type: 'travel' },
 		{ name: '舟山 · 2025.09', coordinates: [122.2074, 29.9856], type: 'travel' },
 		{ name: '芒市 · 2026.01', coordinates: [98.5881, 24.4337], type: 'travel' },
 		{ name: '腾冲 · 2026.01', coordinates: [98.483, 25.017], type: 'travel' },
 		{ name: '大理 · 2026.01', coordinates: [100.2679, 25.6065], type: 'travel' },
 		{ name: '昆明 · 2026.01', coordinates: [102.7183, 25.0389], type: 'travel' },
+		{ name: '梅州 · 2026.03', coordinates: [116.1176, 24.2991], type: 'travel' },
 		{ name: '东山 · 2026.10', coordinates: [117.4203, 23.6994], type: 'travel' },
 	];
 
@@ -219,7 +224,7 @@ const platforms = [
 					closeOnMove: false,
 					focusAfterOpen: false,
 				}).setText(location.name);
-				new maplibregl.Marker({ element: marker, anchor: 'center' })
+				new maplibregl.Marker({ element: marker, anchor: 'center', opacityWhenCovered: 0 })
 					.setLngLat(location.coordinates)
 					.addTo(map);
 				const showPopup = () => popup.setLngLat(location.coordinates).addTo(map!);
