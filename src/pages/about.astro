@@ -183,10 +183,12 @@ const platforms = [
 				style: mapStyle as maplibregl.StyleSpecification,
 				center: [110, 27],
 				zoom: 1.7,
-				projection: 'globe',
 				dragRotate: true,
 				touchPitch: true,
 				attributionControl: false,
+			});
+			map.once('style.load', () => {
+				map?.setProjection({ type: 'globe' });
 			});
 			mapLoadTimer = window.setTimeout(() => {
 				if (!mapLoaded && mapStatus) {
