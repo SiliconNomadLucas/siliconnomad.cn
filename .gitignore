@@ -1,9 +1,5 @@
 # build output
 dist/
-dist-upload.zip
-dist-upload.tar.gz
-dist-mapfix.tar.gz
-dist-mapdiag.tar.gz
 # generated types
 .astro/
 __pycache__/

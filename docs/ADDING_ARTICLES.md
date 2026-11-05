@@ -22,8 +22,5 @@ Write the article in Markdown below the frontmatter.
 published site. Drafts are excluded from the article list, generated pages,
 RSS feed, and sitemap.
 
-Push the change to the `main` branch. The GitHub Actions workflow builds the
-site on a GitHub-hosted runner, then uses Alibaba Cloud OIDC and ECS Cloud
-Assistant to publish the generated files. See
-[`deploy/GITHUB_ACTIONS_ALIYUN.md`](../deploy/GITHUB_ACTIONS_ALIYUN.md) for
-the one-time cloud setup.
+Push the change to the `main` branch. GitHub Actions builds the site on a
+GitHub-hosted runner and publishes the generated static files to GitHub Pages.
