@@ -2,14 +2,26 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 
 const platforms = [
-	{ label: '抖音', href: 'https://v.douyin.com/70Bihprf1o8/' },
-	{ label: '小红书', href: 'https://www.xiaohongshu.com/user/profile/604aea730000000001001e83' },
-	{ label: '豆瓣', href: 'https://www.douban.com/people/SiliconNomad/' },
-	{ label: 'Bilibili', href: 'https://space.bilibili.com/235572105' },
-	{ label: 'GitHub', href: 'https://github.com/SiliconNomadLucas' },
-	{ label: 'YouTube', href: 'https://www.youtube.com/@SiliconNomadLucas' },
-	{ label: 'X', href: 'https://x.com/siliconnomadlucas' },
-	{ label: 'Steam', href: 'https://steamcommunity.com/id/siliconnomadlucas/' },
+	{
+		label: '抖音',
+		accounts: [
+			{ label: '@硅基游民 Lucas', href: 'https://v.douyin.com/70Bihprf1o8/' },
+			{ label: '@南瓜的睡前电台', href: 'https://v.douyin.com/gFv72pnzHRc/' },
+		],
+	},
+	{
+		label: 'Bilibili',
+		accounts: [
+			{ label: '@硅基游民Lucas', href: 'https://space.bilibili.com/235572105' },
+			{ label: '@南瓜的睡前电台', href: 'https://space.bilibili.com/3747566957103870' },
+		],
+	},
+	{ label: '豆瓣', accounts: [{ label: '@Lucas', href: 'https://www.douban.com/people/SiliconNomad/' }] },
+	{ label: '小红书', accounts: [{ label: '@Lucas', href: 'https://www.xiaohongshu.com/user/profile/604aea730000000001001e83' }] },
+	{ label: 'YouTube', accounts: [{ label: '@硅基游民 Lucas', href: 'https://www.youtube.com/@SiliconNomadLucas' }] },
+	{ label: 'X', accounts: [{ label: '@siliconnomadlucas', href: 'https://x.com/siliconnomadlucas' }] },
+	{ label: 'GitHub', accounts: [{ label: '@Lucas', href: 'https://github.com/SiliconNomadLucas' }] },
+	{ label: 'Steam', accounts: [{ label: '@Lucas', href: 'https://steamcommunity.com/id/siliconnomadlucas/' }] },
 ];
 ---
 
@@ -53,7 +65,14 @@ const platforms = [
 			<h2>硅基足迹</h2>
 			<ul class="platform-list">
 				{platforms.map((platform) => (
-					<li><a href={platform.href} target="_blank" rel="noreferrer">{platform.label}</a></li>
+					<li>
+						<span class="platform-name">{platform.label}：</span>
+						<span class="platform-accounts">
+							{platform.accounts.map((account) => (
+								<a href={account.href} target="_blank" rel="noreferrer">{account.label}</a>
+							))}
+						</span>
+					</li>
 				))}
 			</ul>
 		</section>
@@ -89,8 +108,11 @@ const platforms = [
 	.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 	.residence-dot { background: #2563eb; }
 	.travel-dot { background: #f97316; }
-	.platform-list li { padding-left: 0; }
+	.platform-list li { display: flex; align-items: baseline; gap: 8px; padding-left: 0; }
+	.platform-name { flex: 0 0 auto; }
+	.platform-accounts { display: flex; flex-wrap: wrap; gap: 4px 12px; min-width: 0; }
 	.platform-list a { color: inherit; }
+	.platform-list a { text-decoration: underline; text-decoration-color: #c5c9ce; text-underline-offset: 3px; }
 	.platform-list a:hover { color: var(--blue); }
 	@media (max-width: 700px) {
 		.page-main { padding: 112px 22px 70px; }
@@ -99,6 +121,8 @@ const platforms = [
 		.about-section { padding: 25px 0 30px; }
 		.about-section h2 { font-size: 18px; }
 		.world-map { margin-top: 12px; }
+		.platform-list li { align-items: flex-start; gap: 4px; }
+		.platform-accounts { row-gap: 2px; }
 	}
 </style>
 
