@@ -13,6 +13,7 @@ import {
 	siX,
 	siRss,
 	siDouban,
+	siSinaweibo,
 } from 'simple-icons';
 
 interface Props {
@@ -36,6 +37,7 @@ const collections = [
 ];
 const socialLinks = [
 	{ label: '抖音', href: 'https://v.douyin.com/70Bihprf1o8/', icon: siTiktok, qr: douyinQr },
+	{ label: '微博', href: 'https://weibo.com/u/6525271871', icon: siSinaweibo },
 	{ label: '微信公众号', icon: siWechat, qr: wechatQr },
 	{ label: '小红书', href: 'https://www.xiaohongshu.com/user/profile/604aea730000000001001e83', icon: siXiaohongshu },
 	{ label: 'B站', href: 'https://space.bilibili.com/235572105', icon: siBilibili },
@@ -93,11 +95,19 @@ const socialLinks = [
 				<div class="footer-socials">
 					{socialLinks.map((social) => social.qr ? (
 						<div class="footer-social-item qr-item">
-							<button type="button" class="qr-trigger" aria-label={social.label} aria-expanded="false" title={social.label}>
-								<svg viewBox="0 0 24 24" width="20" height="20" role="img" aria-label={social.label} preserveAspectRatio="xMidYMid meet">
-									<path fill="currentColor" d={social.icon.path} />
-								</svg>
-							</button>
+							{social.href ? (
+								<a class="qr-trigger" href={social.href} target="_blank" rel="noreferrer" aria-label={social.label} title={social.label}>
+									<svg viewBox="0 0 24 24" width="20" height="20" role="img" aria-label={social.label} preserveAspectRatio="xMidYMid meet">
+										<path fill="currentColor" d={social.icon.path} />
+									</svg>
+								</a>
+							) : (
+								<button type="button" class="qr-trigger" aria-label={social.label} title={social.label}>
+									<svg viewBox="0 0 24 24" width="20" height="20" role="img" aria-label={social.label} preserveAspectRatio="xMidYMid meet">
+										<path fill="currentColor" d={social.icon.path} />
+									</svg>
+								</button>
+							)}
 							<div class="qr-preview">
 								<Image src={social.qr} alt={`${social.label}二维码`} />
 							</div>
@@ -161,13 +171,13 @@ const socialLinks = [
 	.footer-socials { max-width: 400px; display: flex; flex-wrap: wrap; justify-content: end; gap: 6px; }
 	.footer-social-item, .footer-socials > a { position: relative; flex: 0 0 34px; width: 34px; height: 34px; display: grid; place-items: center; }
 	.qr-item::after { content: ""; position: absolute; z-index: 7; left: 0; bottom: 100%; width: 100%; height: 12px; }
-	.footer-socials > a, .footer-socials button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; background: transparent; color: #c7c7cc; cursor: pointer; transition: color .2s; }
+	.footer-socials > a, .footer-socials .qr-trigger, .footer-socials button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; background: transparent; color: #c7c7cc; cursor: pointer; transition: color .2s; }
 	.footer-socials svg { display: block; width: 20px; height: 20px; overflow: visible; }
-	.footer-socials > a:hover, .footer-socials button:hover { color: #fff; }
+	.footer-socials > a:hover, .footer-socials .qr-trigger:hover, .footer-socials button:hover { color: #fff; }
 	.qr-preview { position: absolute; z-index: 8; bottom: calc(100% + 10px); left: 50%; width: 156px; height: 156px; padding: 9px; transform: translate(-50%, 6px); border: 1px solid #d6d6d6; border-radius: 4px; background: #fff; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .16s ease, transform .16s ease, visibility .16s; }
 	.qr-preview::after { content: ""; position: absolute; top: 100%; left: calc(50% - 6px); width: 10px; height: 10px; transform: translateY(-5px) rotate(45deg); border-right: 1px solid #d6d6d6; border-bottom: 1px solid #d6d6d6; background: #fff; }
 	.qr-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
-	.qr-item:hover .qr-preview, .qr-item:focus-within .qr-preview, .qr-item.open .qr-preview { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
+	.qr-item:hover .qr-preview, .qr-trigger:focus-visible + .qr-preview { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
 	.footer-bottom { color: #a1a1a6; font-size: 10px; }
 	.footer-bottom a:hover { color: #fff; }
 	.footer-bottom { border-top: 1px solid #3a3a3c; padding-top: 13px; display: flex; justify-content: space-between; gap: 15px; }
@@ -189,7 +199,7 @@ const socialLinks = [
 		.footer-main { align-items: flex-start; flex-direction: column; gap: 20px; padding-bottom: 18px; }
 		.footer-socials { max-width: 100%; justify-content: flex-start; gap: 5px; }
 		.footer-social-item, .footer-socials > a { flex-basis: 32px; width: 32px; height: 32px; }
-		.footer-socials > a, .footer-socials button { width: 32px; height: 32px; }
+		.footer-socials > a, .footer-socials .qr-trigger, .footer-socials button { width: 32px; height: 32px; }
 		.qr-preview { width: 136px; height: 136px; }
 		.footer-bottom { font-size: 9px; }
 		.footer-bottom div { gap: 12px; }
@@ -212,27 +222,4 @@ const socialLinks = [
 		menuToggle?.setAttribute('aria-expanded', 'false');
 		navigation.classList.remove('open');
 	}));
-	const touchMode = window.matchMedia('(hover: none)').matches;
-	document.querySelectorAll<HTMLButtonElement>('.qr-trigger').forEach((button) => {
-		const item = button.closest<HTMLElement>('.qr-item');
-		button.addEventListener('click', () => {
-			if (!touchMode || !item) return;
-			const open = item.classList.toggle('open');
-			button.setAttribute('aria-expanded', String(open));
-		});
-	});
-	document.addEventListener('pointerdown', (event) => {
-		if (!touchMode || (event.target as Element).closest('.qr-item')) return;
-		document.querySelectorAll<HTMLElement>('.qr-item.open').forEach((item) => {
-			item.classList.remove('open');
-			item.querySelector('.qr-trigger')?.setAttribute('aria-expanded', 'false');
-		});
-	});
-	document.addEventListener('keydown', (event) => {
-		if (event.key !== 'Escape') return;
-		document.querySelectorAll<HTMLElement>('.qr-item.open').forEach((item) => {
-			item.classList.remove('open');
-			item.querySelector('.qr-trigger')?.setAttribute('aria-expanded', 'false');
-		});
-	});
 </script>
