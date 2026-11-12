@@ -44,7 +44,7 @@ const socialLinks = [
 	{ label: '豆瓣', href: 'https://www.douban.com/people/SiliconNomad/', icon: siDouban },
 	{ label: 'GitHub', href: 'https://github.com/SiliconNomadLucas', icon: siGithub },
 	{ label: 'YouTube', href: 'https://www.youtube.com/@SiliconNomadLucas', icon: siYoutube },
-	{ label: 'X', href: 'https://x.com/siliconnomadlucas', icon: siX },
+	{ label: 'X', href: 'https://x.com/Silicon_Nomad', icon: siX },
 	{ label: 'RSS', href: '/rss.xml', icon: siRss },
 ];
 ---
@@ -191,10 +191,8 @@ const socialLinks = [
 		.primary-nav { position: absolute; top: 59px; left: 0; right: 0; height: auto; padding: 0 22px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 20px; overflow: hidden; max-height: 0; background: #fafafc; border-bottom: 1px solid transparent; transition: max-height .22s ease, padding .22s ease; }
 		.primary-nav.open { max-height: 370px; padding-top: 10px; padding-bottom: 12px; border-color: #e6e6e8; }
 		.primary-nav > a, .primary-nav > .collections-dropdown > a { min-height: 0; display: flex; align-items: center; padding: 12px 0; line-height: 1.2; text-align: left; }
-		.collections-dropdown { grid-column: 1 / -1; height: auto; display: grid; grid-template-columns: 1fr; }
-		.collections-dropdown > a { grid-column: 1; }
-		.collections-menu { position: static; width: auto; padding: 0 0 5px; transform: none; border: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; opacity: 1; visibility: visible; pointer-events: auto; transition: none; }
-		.collections-menu a { padding: 9px 0; white-space: normal; }
+		.collections-dropdown { height: auto; }
+		.collections-menu { display: none; }
 		.site-footer { padding: 24px 22px 15px; }
 		.footer-main { align-items: flex-start; flex-direction: column; gap: 20px; padding-bottom: 18px; }
 		.footer-socials { max-width: 100%; justify-content: flex-start; gap: 5px; }
