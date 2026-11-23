@@ -6,4 +6,16 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
 	site: 'https://siliconnomad.cn',
 	integrations: [sitemap()],
+	vite: {
+		environments: {
+			astro: {
+				resolve: {
+					noExternal: ['yaml', 'picomatch'],
+				},
+				optimizeDeps: {
+					include: ['yaml', 'picomatch'],
+				},
+			},
+		},
+	},
 });
